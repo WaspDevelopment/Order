@@ -1,0 +1,44 @@
+<!-- admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    <label for="orderId">Enter Order ID:</label>
+    <input type="text" id="orderId" name="orderId" required>
+    <button type="button" onclick="getRegistrationDetails()">Get Registration Details</button>
+
+    <div id="registrationDetails"></div>
+
+    <script>
+        function getRegistrationDetails() {
+            const orderId = document.getElementById('orderId').value;
+
+            fetch(`/admin/registrations/${orderId}`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Registration not found');
+                    }
+                })
+                .then(data => {
+                    const registrationDetailsDiv = document.getElementById('registrationDetails');
+                    registrationDetailsDiv.innerHTML = `<strong>Registration Details:</strong><br>
+                                                Order ID: ${data.orderId}<br>
+                                                Room ID: ${data.roomId}<br>
+                                                Stay ID: ${data.stayId}`;
+                    // Add more fields as needed
+                })
+                .catch(error => {
+                    const registrationDetailsDiv = document.getElementById('registrationDetails');
+                    registrationDetailsDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+                });
+        }
+    </script>
+</body>
+</html>
